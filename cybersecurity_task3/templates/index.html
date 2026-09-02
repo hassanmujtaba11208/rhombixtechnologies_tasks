@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Home – SecureCode Scanner X{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>SecureCode Scanner X</h1>
+    <p class="subtitle">AI‑Powered Bug Bounty Assistant</p>
+    <p>
+        Upload source code to get instant static security analysis, vulnerability intelligence, and professional PDF reports.
+    </p>
+    <a class="btn" href="{{ url_for('scan') }}">Start a New Scan</a>
+</section>
+
+<section class="features">
+    <h2>Key Features</h2>
+    <ul>
+        <li>Multi‑language SAST (Python, JavaScript, PHP, HTML)</li>
+        <li>OWASP & CWE mapping</li>
+        <li>Security score & risk level</li>
+        <li>Scan history & analytics</li>
+        <li>Enterprise‑style PDF reports</li>
+    </ul>
+</section>
+{% endblock %}

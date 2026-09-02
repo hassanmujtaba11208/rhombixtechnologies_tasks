@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SecureCode Scanner X{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <div class="page-header">
+        <h1>🛡️ Security Dashboard</h1>
+        <p>Monitor scans, vulnerabilities, and security posture.</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h3>Total Scans</h3>
+            <span>{{ total_scans }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Vulnerabilities</h3>
+            <span>{{ total_vulns }}</span>
+        </div>
+
+        <div class="stat-card critical">
+            <h3>Critical</h3>
+            <span>{{ critical }}</span>
+        </div>
+
+        <div class="stat-card high">
+            <h3>High</h3>
+            <span>{{ high }}</span>
+        </div>
+
+        <div class="stat-card medium">
+            <h3>Medium</h3>
+            <span>{{ medium }}</span>
+        </div>
+
+        <div class="stat-card low">
+            <h3>Low</h3>
+            <span>{{ low }}</span>
+        </div>
+
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+
+        <div class="chart-card">
+            <h2>Vulnerability Distribution</h2>
+            <canvas id="vulnChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h2>Recent Scans</h2>
+
+            {% if recent_scans %}
+            <ul class="recent-scans">
+
+                {% for scan in recent_scans %}
+                <li>
+                    <a href="{{ url_for('results', scan_id=scan.id) }}">
+                        {{ scan.file_name }}
+                    </a>
+
+                    <div class="scan-meta">
+                        {{ scan.total_vulnerabilities }} Issues |
+                        Security Score: {{ scan.security_score }}
+                    </div>
+                </li>
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+            <p>No scans available.</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const chartCanvas = document.getElementById("vulnChart");
+
+    if (!chartCanvas) {
+        return;
+    }
+
+    const chartData = [
+        Number("{{ critical | default(0) }}"),
+        Number("{{ high | default(0) }}"),
+        Number("{{ medium | default(0) }}"),
+        Number("{{ low | default(0) }}")
+    ];
+
+    new Chart(chartCanvas, {
+        type: "doughnut",
+        data: {
+            labels: [
+                "Critical",
+                "High",
+                "Medium",
+                "Low"
+            ],
+            datasets: [{
+                data: chartData,
+                backgroundColor: [
+                    "#ef4444",
+                    "#f97316",
+                    "#f59e0b",
+                    "#22c55e"
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

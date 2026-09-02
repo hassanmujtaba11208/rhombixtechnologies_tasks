@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}New Scan – SecureCode Scanner X{% endblock %}
+{% block content %}
+<h1>New Security Scan</h1>
+<form method="post" enctype="multipart/form-data" class="scan-form">
+    <div class="form-group">
+        <label for="file">Source Code File</label>
+        <input type="file" name="file" id="file" required accept=".py,.js,.php,.html,.htm,.txt">
+    </div>
+    <button type="submit" class="btn">Run Scan</button>
+</form>
+{% endblock %}

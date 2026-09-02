@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Scan Results – SecureCode Scanner X{% endblock %}
+{% block content %}
+<h1>Scan Results</h1>
+
+<div class="scan-summary">
+    <div><strong>File:</strong> {{ scan.file_name }}</div>
+    <div><strong>Language:</strong> {{ scan.language }}</div>
+    <div><strong>Security Score:</strong> {{ scan.security_score }} ({{ scan.risk_level }})</div>
+    <div><strong>Vulnerabilities:</strong> {{ scan.total_vulnerabilities }}</div>
+    <div>
+        <a class="btn" href="{{ url_for('download_report', scan_id=scan.id) }}">Download PDF Report</a>
+    </div>
+</div>
+
+<h2>Findings</h2>
+{% if vulns %}
+<table class="vuln-table">
+    <thead>
+    <tr>
+        <th>Severity</th>
+        <th>Vulnerability</th>
+        <th>File</th>
+        <th>Line</th>
+        <th>CWE</th>
+        <th>Remediation</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in vulns %}
+    <tr>
+        <td class="severity-{{ v.severity|lower }}">{{ v.severity }}</td>
+        <td>{{ v.vuln_name }}</td>
+        <td>{{ v.file_name }}</td>
+        <td>{{ v.line_number }}</td>
+        <td>{{ v.cwe_id or '-' }}</td>
+        <td>{{ v.remediation[:80] }}{% if v.remediation|length > 80 %}...{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No vulnerabilities detected.</p>
+{% endif %}
+{% endblock %}

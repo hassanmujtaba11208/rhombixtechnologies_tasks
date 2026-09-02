@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Scan History – SecureCode Scanner X{% endblock %}
+{% block content %}
+<h1>Scan History</h1>
+
+{% if scans %}
+<table class="history-table">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>File</th>
+        <th>Language</th>
+        <th>Vulnerabilities</th>
+        <th>Score</th>
+        <th>Risk</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for s in scans %}
+    <tr>
+        <td>{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td><a href="{{ url_for('results', scan_id=s.id) }}">{{ s.file_name }}</a></td>
+        <td>{{ s.language }}</td>
+        <td>{{ s.total_vulnerabilities }}</td>
+        <td>{{ s.security_score }}</td>
+        <td>{{ s.risk_level }}</td>
+        <td>
+            <a class="btn-sm" href="{{ url_for('download_report', scan_id=s.id) }}">PDF</a>
+            <form method="post" action="{{ url_for('delete_scan', scan_id=s.id) }}" style="display:inline;" onsubmit="return confirm('Delete this scan?');">
+                <button type="submit" class="btn-sm danger">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No scans yet. <a href="{{ url_for('scan') }}">Run your first scan</a>.</p>
+{% endif %}
+{% endblock %}
